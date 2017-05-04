@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
@@ -19,6 +21,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
@@ -62,6 +65,8 @@ public class EditorPanel {
 		fileMenu.add(Open);
 		fileMenu.addSeparator();
 		fileMenu.add(Quit);
+		
+		menubar.add(new JMenuItem(Debug));
 
 		editor.addKeyListener(k1);
 
@@ -197,6 +202,15 @@ public class EditorPanel {
 		public void actionPerformed(ActionEvent e) {
 			saveOld();
 			System.exit(0);
+		}
+	};
+	
+	Action Debug = new AbstractAction("Debug") {
+		public void actionPerformed(ActionEvent e) {
+			RAMMachine machine = new RAMMachine(editor.getNumberOfLines());
+			ArrayList<String> code = new ArrayList<>(Arrays.asList(editor.getText().split("\\r?\\n")));
+			machine.inputCode(code);
+			machine.processCode();
 		}
 	};
 
