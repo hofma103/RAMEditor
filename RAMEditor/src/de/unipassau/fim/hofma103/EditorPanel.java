@@ -26,7 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
 import org.irsn.javax.swing.CodeEditorPane;
-import org.irsn.javax.swing.DefaultSyntaxColorizer.RegExpHashMap;;
+import org.irsn.javax.swing.DefaultSyntaxColorizer.RegExpHashMap;
 
 public class EditorPanel {
 	@SuppressWarnings("unchecked")
@@ -50,6 +50,7 @@ public class EditorPanel {
 		// editor.setVerticalLineAtPos(80);
 		updateWindowTitle();
 		frame.getContentPane().add(editor.getContainerWithLines());
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(800, 300);
 
