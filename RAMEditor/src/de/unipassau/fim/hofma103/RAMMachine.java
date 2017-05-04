@@ -1,8 +1,5 @@
 package de.unipassau.fim.hofma103;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -13,11 +10,14 @@ public class RAMMachine {
 
 	private int accumulator = 0;
 	private int programCounter = 0;
+	private Debugger debug;
 
-	public RAMMachine(int programLength) {
-		memory = new Memory();
+	public RAMMachine(int programLength, Debugger panel) {
+		memory = new Memory(panel);
 		functions = new ArrayList<String>(programLength);
 		functionParameters = new ArrayList<Integer>(programLength);
+
+		this.debug = panel;
 	}
 
 	public void inputCode(ArrayList<String> code) {
@@ -43,10 +43,9 @@ public class RAMMachine {
 			String function = functions.get(programCounter);
 			int functionParameter = functionParameters.get(programCounter);
 			if (function.equals("read") || function.equals("print"))
-				System.out.println(String.format("%s()", function));
+				debug.printOutput(String.format("%s()", function));
 			else
-				System.out.println(
-						String.format("%s(%d)", function.replace("At", "@"), functionParameter));
+				debug.printOutput(String.format("%s(%d)", function.replace("At", "@"), functionParameter));
 			java.lang.reflect.Method method = null;
 			try {
 				method = this.getClass().getMethod(function, int.class);
@@ -167,16 +166,14 @@ public class RAMMachine {
 	}
 
 	public void read(int param) {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		try {
-			accumulator = Integer.parseInt(reader.readLine());
-		} catch (NumberFormatException | IOException e) {
-			// TODO Auto-generated catch block
+			accumulator = Integer.parseInt(debug.getInput());
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void print(int param) {
-		System.out.println(accumulator);
+		debug.printOutput("" + accumulator);
 	}
 }

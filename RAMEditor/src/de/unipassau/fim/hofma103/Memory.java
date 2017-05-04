@@ -14,14 +14,17 @@ public class Memory {
 	private int[] memory;
 	private Random random;
 	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+	private Debugger debug;
 
-	public Memory() {
+	public Memory(Debugger panel) {
 		memory = new int[5];
 		random = new Random();
 
 		for (int i = 0; i < memory.length; i++) {
 			memory[i] = random.nextInt();
 		}
+
+		this.debug = panel;
 	}
 
 	/**
@@ -84,6 +87,6 @@ public class Memory {
 	 * after storing a value to it
 	 */
 	private void dumpMemory() {
-		System.out.format("%s\n", Arrays.toString(memory));
+		debug.printOutput(String.format("%s", Arrays.toString(memory)));
 	}
 }
