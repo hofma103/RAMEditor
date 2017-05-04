@@ -27,7 +27,7 @@ public class Debugger {
 		inputArea = new JTextField();
 
 		consoleOutput.setEditable(false);
-//		consoleOutput.setEnabled(false);
+		// consoleOutput.setEnabled(false);
 
 		frame.add(new JScrollPane(consoleOutput), BorderLayout.CENTER);
 		frame.add(inputArea, BorderLayout.SOUTH);
