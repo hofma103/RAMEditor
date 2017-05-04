@@ -65,7 +65,7 @@ public class EditorPanel {
 		fileMenu.add(Open);
 		fileMenu.addSeparator();
 		fileMenu.add(Quit);
-		
+
 		menubar.add(new JMenuItem(Debug));
 
 		editor.addKeyListener(k1);
@@ -147,10 +147,9 @@ public class EditorPanel {
 
 	private KeyListener k1 = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
-			if (editor.getText().length() > 0) {
-				changed = true;
-				Save.setEnabled(true);
-			}
+			changed = true;
+			Save.setEnabled(true);
+			editor.updateLineNumberView();
 		}
 	};
 
@@ -204,7 +203,8 @@ public class EditorPanel {
 			System.exit(0);
 		}
 	};
-	
+
+	@SuppressWarnings("serial")
 	Action Debug = new AbstractAction("Debug") {
 		public void actionPerformed(ActionEvent e) {
 			RAMMachine machine = new RAMMachine(editor.getNumberOfLines());
