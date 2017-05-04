@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class RAMMachine {
-	private ArrayList<Integer> memory;
+	private Memory memory;
 	private ArrayList<String> functions;
 	private ArrayList<Integer> functionParameters;
 	
@@ -15,7 +15,7 @@ public class RAMMachine {
 	private int programCounter = 0;
 	
 	public RAMMachine(int programLength) {
-		memory = new ArrayList<>();
+		memory = new Memory();
 		functions = new ArrayList<String>(programLength);
 		functionParameters = new ArrayList<Integer>(programLength);
 	}
@@ -32,7 +32,7 @@ public class RAMMachine {
 			int methodParam = 0;
 			if (endIndex - 1 > middleIndex)
 				methodParam = Integer.parseInt(str.substring(middleIndex + 1, endIndex));
-			method.replace("@", "At");
+			method = method.replace("@", "At");
 			functions.add(method);
 			functionParameters.add(methodParam);
 		}
