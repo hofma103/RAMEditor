@@ -1,0 +1,40 @@
+read() // n einlesen
+store(0) // n Speichern
+store(1) // Zähler
+loadAbs(0)
+store(2) // Startwert für Summe
+loadAbs(1)
+store(3) // Startwert für Produkt
+loadAbs(5)
+store(4) // erste freie Speicherzelle zum ablegen der Werte
+->read()
+  store@(4) // eingelesener Wert gespeichert
+  load(4)
+  addAbs(1)
+  store(4) // nächste freie Position berechnet
+  load(1)
+  subAbs(1)
+  store(1) // Zähler um 1 verringert
+<-jumpGtzAbs(10)
+load(0)
+store(1) // Zähler zurücksetzen
+loadAbs(5)
+store(4) // Position der nächsten zu verarbeitenden Zahl
+->load@(4) // nächsten Wert lesen
+  add(2)
+  store(2) // Summe berechnen
+  load@(4) // Wert nochmals lesen
+  mult(3)
+  store(3) // Produkt berechnen
+  load(1)
+  subAbs(1)
+  store(1) // Zahl der zu verarbeitenden Werte verringert
+  load(4)
+  addAbs(1)
+  store(4) // Position der nächsten zu verarbeitenden Zahl
+  load(1)
+<-jumpGtzAbs(23)
+load(2) // Summe laden
+print() // Summe ausgeben
+load(3) // Produkt laden
+print() // Produkt ausgeben
