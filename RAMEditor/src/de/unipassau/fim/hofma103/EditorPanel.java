@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
@@ -41,6 +39,7 @@ public class EditorPanel {
 	JFrame frame = new JFrame();
 
 	public void showEditorPanel() throws BadLocationException {
+
 		buildSyntaxHighlighting();
 		buildHelpMenu();
 
@@ -52,7 +51,7 @@ public class EditorPanel {
 		frame.getContentPane().add(editor.getContainerWithLines());
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(800, 300);
+		frame.setSize(800, 500);
 
 		JMenuBar menubar = new JMenuBar();
 		frame.setJMenuBar(menubar);
@@ -208,10 +207,8 @@ public class EditorPanel {
 	@SuppressWarnings("serial")
 	Action Debug = new AbstractAction("Debug") {
 		public void actionPerformed(ActionEvent e) {
-			RAMMachine machine = new RAMMachine(editor.getNumberOfLines());
-			ArrayList<String> code = new ArrayList<>(Arrays.asList(editor.getText().split("\\r?\\n")));
-			machine.inputCode(code);
-			machine.processCode();
+			Debugger debug = new Debugger();
+			debug.startDebugging(editor.getText(), editor.getNumberOfLines());
 		}
 	};
 
