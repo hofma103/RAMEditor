@@ -6,9 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
@@ -205,7 +207,8 @@ public class EditorPanel {
 
 	private void saveOld() {
 		if (changed) {
-			if (JOptionPane.showConfirmDialog(frame, String.format("Wollen Sie die Datei \"%s\" speichern?", currentFile), "Speichern",
+			if (JOptionPane.showConfirmDialog(frame,
+					String.format("Wollen Sie die Datei \"%s\" speichern?", currentFile), "Speichern",
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 				saveFile(currentFile);
 		}
@@ -227,16 +230,16 @@ public class EditorPanel {
 
 	private void readInFile(String fileName) {
 		try {
-			FileReader r = new FileReader(fileName);
-			editor.read(r, null);
-			r.close();
+			Path file = Paths.get(fileName);
+			editor.setText(new String(Files.readAllBytes(file)));
 			currentFile = fileName;
 			changed = false;
 			Save.setEnabled(false);
 			updateWindowTitle();
 		} catch (IOException e) {
 			Toolkit.getDefaultToolkit().beep();
-			JOptionPane.showMessageDialog(frame, String.format("Die Datei \"%s\" konnte nicht gefunden werden", fileName));
+			JOptionPane.showMessageDialog(frame,
+					String.format("Die Datei \"%s\" konnte nicht gefunden werden", fileName));
 		}
 	}
 
