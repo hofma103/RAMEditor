@@ -1,4 +1,2 @@
-read()
-store(0)
-addAbs(2)
-print()
+road()
+dest()
