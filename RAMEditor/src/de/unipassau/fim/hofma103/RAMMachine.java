@@ -23,13 +23,14 @@ public class RAMMachine {
 	public void inputCode(ArrayList<String> code) {
 		for (int i = 0; i < code.size(); i++) {
 			String str = code.get(i);
+			str = str.replaceAll("\\s+", "");
 			int beginIndex = 0;
 			int middleIndex = str.indexOf("(");
 			int endIndex = str.indexOf(")");
-			if (str.startsWith("->") || str.startsWith("<-") || str.startsWith("  "))
+			if (str.startsWith("->") || str.startsWith("<-"))
 				beginIndex = 2;
 			String method = str.substring(beginIndex, middleIndex);
-			int methodParam = 0;
+			int methodParam = Integer.MIN_VALUE;
 			if (endIndex - 1 > middleIndex)
 				methodParam = Integer.parseInt(str.substring(middleIndex + 1, endIndex));
 			method = method.replace("@", "At");
@@ -39,18 +40,18 @@ public class RAMMachine {
 	}
 
 	public void processCode() {
-		while (programCounter < functions.size()) {
+		while (programCounter < functions.size() && !debug.interrupt) {
 			String function = functions.get(programCounter);
 			int functionParameter = functionParameters.get(programCounter);
-			if (function.equals("read") || function.equals("print"))
-				debug.printOutput(String.format("%s()", function));
-			else
-				debug.printOutput(String.format("%s(%d)", function.replace("At", "@"), functionParameter));
+			
+			debug.printOutput(String.format("%s" + (functionParameter != Integer.MIN_VALUE ? "(%d)" : "()"), function.replace("At", "@"), functionParameter));
+			
 			java.lang.reflect.Method method = null;
 			try {
 				method = this.getClass().getMethod(function, int.class);
 			} catch (NoSuchMethodException e1) {
 				e1.printStackTrace();
+				debug.printOutput(String.format("Error: Funktion \"%s\" nicht gefunden!", function));
 			} catch (SecurityException e1) {
 				e1.printStackTrace();
 			}
@@ -60,11 +61,21 @@ public class RAMMachine {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
+				debug.printOutput(String.format("Error: Funktion \"%s\" wurde mit einem ungütigen Argument aufgerufen", function));
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
+				debug.printOutput(String.format("Error: Funktion \"%s\" hat einen Fehler verursacht!", function));
 			}
 			programCounter++;
+
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+		if (debug.interrupt)
+			debug.printOutput("Durch Benutzer unterbrochen");
 	}
 
 	public void add(int param) {
@@ -166,10 +177,14 @@ public class RAMMachine {
 	}
 
 	public void read(int param) {
+		String input = debug.getInput();
 		try {
-			accumulator = Integer.parseInt(debug.getInput());
+			accumulator = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
+			debug.printOutput(String.format("Error: \"%s\" ist keine Zahl!", input));
+			debug.printOutput("Bitte geben Sie eine neue Zahl ein");
+			read(param);
 		}
 	}
 
