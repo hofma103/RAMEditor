@@ -53,11 +53,11 @@ public class Memory {
 	 * @return the old value at the given index
 	 */
 	public int set(int index, int newVal) {
-		dumpMemory();
 		if (index >= memory.length)
 			increaseMemory(index + 1);
 		int oldValue = memory[index];
 		memory[index] = newVal;
+		dumpMemory();
 		return oldValue;
 	}
 
@@ -87,6 +87,7 @@ public class Memory {
 	 * after storing a value to it
 	 */
 	private void dumpMemory() {
-		debug.printOutput(String.format("%s", Arrays.toString(memory)));
+		if (Launcher.enableMemDump)
+			debug.printOutput(String.format("%s", Arrays.toString(memory)));
 	}
 }
