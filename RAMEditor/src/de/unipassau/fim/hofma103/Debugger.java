@@ -1,46 +1,134 @@
 package de.unipassau.fim.hofma103;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.Document;
 
-public class Debugger {
-	private JFrame frame;
-	private JTextArea consoleOutput;
+import org.irsn.javax.swing.CodeEditorPane;
+import org.irsn.javax.swing.DefaultSyntaxColorizer.RegExpHashMap;
+
+@SuppressWarnings("serial")
+public class Debugger extends JFrame {
 	private JTextField inputArea;
+
+	private CodeEditorPane consoleOutput;
 
 	private Debugger instance = this;
 
 	private String input = null;
 
-	public Debugger() {
-		frame = new JFrame("Debugger");
-		consoleOutput = new JTextArea();
+	private EditorPanel panel;
+
+	private boolean debuggerIsRunning = false;
+	public boolean interrupt = false;
+
+	private String lineseparator = System.getProperty("line.separator");
+	private DefaultCaret caret;
+
+	@SuppressWarnings("unchecked")
+	private HashMap<String, Color> syntax = new RegExpHashMap();
+
+	public Debugger(EditorPanel panel) {
+		this.panel = panel;
+
+		enableEvents(WriteTextEvent.id);
+		setName("Debugger");
+		consoleOutput = new CodeEditorPane();
+
+		initDebugSyntax();
+
+		consoleOutput.setKeywordColor(syntax);
 		inputArea = new JTextField();
 
 		consoleOutput.setEditable(false);
-		// consoleOutput.setEnabled(false);
+		caret = (DefaultCaret) consoleOutput.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		consoleOutput.setDisplayLineNumbers(false);
 
-		frame.add(new JScrollPane(consoleOutput), BorderLayout.CENTER);
-		frame.add(inputArea, BorderLayout.SOUTH);
+		add(consoleOutput.getContainerWithLines(), BorderLayout.CENTER);
+		add(inputArea, BorderLayout.SOUTH);
 
-		frame.setSize(800, 500);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JMenuBar menubar = new JMenuBar();
+		menubar.add(new JMenuItem(Start));
+		menubar.add(new JMenuItem(End));
+		menubar.add(new JMenuItem(ClearConsole));
+		End.setEnabled(false);
 
-		frame.setVisible(true);
+		setJMenuBar(menubar);
+
+		setSize(800, 500);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		inputArea.addKeyListener(key);
 	}
 
+	private void initDebugSyntax() {
+		for (String elem : panel.syntax.keySet()) {
+			syntax.put(elem, panel.syntax.get(elem));
+		}
+
+		syntax.put("^Error.*", Color.RED);
+		syntax.put("^Memorydump.*", Color.GREEN);
+	}
+
+	public void setVisible() {
+		ClearConsole.actionPerformed(null);
+		setVisible(true);
+	}
+
+	Action Start = new AbstractAction("Debugger starten") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ClearConsole.actionPerformed(null);
+			interrupt = false;
+			if (!debuggerIsRunning) {
+				if (panel.getEditor().getText().length() > 0) {
+					startDebugging(panel.getEditor().getText(), panel.getEditor().getNumberOfLines());
+					End.setEnabled(true);
+					Start.setEnabled(false);
+					inputArea.requestFocusInWindow();
+				} else {
+					printOutput("Kein Code gefunden!");
+				}
+			}
+		}
+	};
+	Action End = new AbstractAction("Abbrechen") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (debuggerIsRunning) {
+				interrupt = true;
+				End.setEnabled(false);
+				Start.setEnabled(true);
+			}
+		}
+	};
+	Action ClearConsole = new AbstractAction("Konsole leeren") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			consoleOutput.setText("");
+		}
+	};
+
 	public void startDebugging(String editorCode, int numLines) {
+		debuggerIsRunning = true;
 		Thread thr = new Thread(new Runnable() {
 
 			@Override
@@ -49,9 +137,31 @@ public class Debugger {
 				ArrayList<String> code = new ArrayList<>(Arrays.asList(editorCode.split("\\r?\\n")));
 				machine.inputCode(code);
 				machine.processCode();
+				debuggerIsRunning = false;
+				interrupt = false;
+				End.setEnabled(false);
+				Start.setEnabled(true);
 			}
 		});
 		thr.start();
+	}
+
+	@Override
+	protected void processEvent(AWTEvent e) {
+		if (e instanceof WriteTextEvent) {
+			WriteTextEvent event = (WriteTextEvent) e;
+			Document doc = consoleOutput.getDocument();
+			try {
+				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? lineseparator : "") + event.getContent(),
+						null);
+				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+				consoleOutput.setCaretPosition(doc.getLength());
+			} catch (BadLocationException e1) {
+				e1.printStackTrace();
+			}
+		} else {
+			super.processEvent(e);
+		}
 	}
 
 	KeyListener key = new KeyAdapter() {
@@ -65,20 +175,29 @@ public class Debugger {
 	};
 
 	public String getInput() {
-		while (input == null) {
+		while (input == null && !interrupt) {
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		// prevents NumberFormatException if interrupting the program
+		if (interrupt)
+			input = "0";
 		String tmp = input;
 		input = null;
 		return tmp;
 	}
 
 	public void printOutput(String out) {
-		consoleOutput.append(out + "\n\r");
+		Launcher.queue.postEvent(new WriteTextEvent(this, out));
+		// Document doc = consoleOutput.getDocument();
+		// try {
+		// doc.insertString(doc.getLength(), (doc.getLength() > 0 ?
+		// lineseparator : "") + out, null);
+		// caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		// } catch (BadLocationException e) {
+		// }
 	}
 }
