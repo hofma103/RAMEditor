@@ -21,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 
 import org.irsn.javax.swing.CodeEditorPane;
@@ -28,7 +29,7 @@ import org.irsn.javax.swing.DefaultSyntaxColorizer.RegExpHashMap;
 
 public class EditorPanel {
 	@SuppressWarnings("unchecked")
-	private HashMap<String, Color> syntax = new RegExpHashMap();
+	public HashMap<String, Color> syntax = new RegExpHashMap();
 	private CodeEditorPane editor = new CodeEditorPane();
 	private HashMap<String, String> help = new HashMap<String, String>();
 	private String currentFile = "Unbenannt";
@@ -36,7 +37,10 @@ public class EditorPanel {
 
 	private boolean changed = false;
 
-	JFrame frame = new JFrame();
+	private JFrame frame = new JFrame();
+
+	private EditorPanel instance = this;
+	private Debugger debug = null;
 
 	public void showEditorPanel() throws BadLocationException {
 
@@ -45,8 +49,9 @@ public class EditorPanel {
 
 		editor.setKeywordColor(syntax);
 		editor.setKeywordHelp(help);
+		editor.setBracesToComplete(new char[][] { { '(', ')' }, { '>', '<' }, { '-', '-' } });
+		editor.setText("");
 
-		// editor.setVerticalLineAtPos(80);
 		updateWindowTitle();
 		frame.getContentPane().add(editor.getContainerWithLines());
 
@@ -207,10 +212,22 @@ public class EditorPanel {
 	@SuppressWarnings("serial")
 	Action Debug = new AbstractAction("Debug") {
 		public void actionPerformed(ActionEvent e) {
-			Debugger debug = new Debugger();
-			debug.startDebugging(editor.getText(), editor.getNumberOfLines());
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					saveOld();
+					if (debug == null)
+						debug = new Debugger(instance);
+					debug.setVisible();
+				}
+			});
 		}
 	};
+
+	public CodeEditorPane getEditor() {
+		return editor;
+	}
 
 	private void saveFileAs() {
 		if (dialog.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
