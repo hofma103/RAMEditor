@@ -88,6 +88,6 @@ public class Memory {
 	 */
 	private void dumpMemory() {
 		if (Launcher.enableMemDump)
-			debug.printOutput(String.format("%s", Arrays.toString(memory)));
+			debug.printOutput(String.format("Memorydump: %s", Arrays.toString(memory)));
 	}
 }
