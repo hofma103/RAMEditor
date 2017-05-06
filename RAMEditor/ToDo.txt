@@ -3,3 +3,5 @@ possibly also with an additional information about how many steps were inside lo
 
 auto formatting with spaces when using -> <- to hint at loops (probably use this as a way to measure loop executions)
 somehow also log the user input in the console
+
+possibly reenable the line numbers again in the console window
