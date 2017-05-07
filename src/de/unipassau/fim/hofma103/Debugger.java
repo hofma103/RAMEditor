@@ -85,6 +85,7 @@ public class Debugger extends JFrame {
 
 		syntax.put("^Error.*", Color.RED);
 		syntax.put("^Memorydump.*", Color.GREEN);
+		syntax.put("^Zusammenfassung.*", Color.GREEN);
 	}
 
 	public void setVisible() {
