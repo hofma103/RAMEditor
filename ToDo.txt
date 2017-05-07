@@ -1,1 +1,2 @@
 auto formatting with spaces when using -> <- to hint at loops (probably use this as a way to measure loop executions)
+properly handle NullPointerExceptions etc in RAMMachine
