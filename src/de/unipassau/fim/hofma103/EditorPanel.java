@@ -1,6 +1,7 @@
 package de.unipassau.fim.hofma103;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -51,6 +52,9 @@ public class EditorPanel {
 		editor.setKeywordHelp(help);
 		editor.setBracesToComplete(new char[][] { { '(', ')' }, { '>', '<' }, { '-', '-' } });
 		editor.setText("");
+		
+		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
+		editor.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
 
 		updateWindowTitle();
 		frame.getContentPane().add(editor.getContainerWithLines());

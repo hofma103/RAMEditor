@@ -3,6 +3,7 @@ package de.unipassau.fim.hofma103;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -60,6 +61,9 @@ public class Debugger extends JFrame {
 		consoleOutput.setEditable(false);
 		caret = (DefaultCaret) consoleOutput.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
+		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
+		consoleOutput.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
 
 		add(consoleOutput.getContainerWithLines(), BorderLayout.CENTER);
 		add(inputArea, BorderLayout.SOUTH);
