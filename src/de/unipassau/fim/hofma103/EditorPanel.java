@@ -257,7 +257,6 @@ public class EditorPanel {
 			Save.setEnabled(false);
 			updateWindowTitle();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

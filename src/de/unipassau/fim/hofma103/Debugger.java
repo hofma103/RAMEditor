@@ -87,7 +87,7 @@ public class Debugger extends JFrame {
 			syntax.put(elem, panel.syntax.get(elem));
 		}
 
-		syntax.put("^Error.*", Color.RED);
+		syntax.put("^Fehler.*", Color.RED);
 		syntax.put("^Memorydump.*", Color.GREEN);
 		syntax.put("^Zusammenfassung.*", Color.GREEN);
 		syntax.put("^Eingabe.*", Color.GREEN);
@@ -170,7 +170,6 @@ public class Debugger extends JFrame {
 				consoleOutput.updateLineNumberDivider();
 				consoleOutput.updateLineNumberView();
 			} catch (BadLocationException e1) {
-				e1.printStackTrace();
 			}
 		} else {
 			super.processEvent(e);
@@ -194,7 +193,6 @@ public class Debugger extends JFrame {
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 		// prevents NumberFormatException if interrupting the program
