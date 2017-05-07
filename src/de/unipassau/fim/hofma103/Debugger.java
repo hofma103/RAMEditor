@@ -207,4 +207,8 @@ public class Debugger extends JFrame {
 	public void printOutput(String out) {
 		Launcher.queue.postEvent(new WriteTextEvent(this, out));
 	}
+
+	public void printError(String out, int lineNumber) {
+		Launcher.queue.postEvent(new WriteTextEvent(this, String.format("Fehler in Zeile %d: %s", lineNumber, out)));
+	}
 }
