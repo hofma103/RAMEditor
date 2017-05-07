@@ -41,7 +41,8 @@ public class Launcher {
 				"Aktiviert memory-dump während des Debuggens");
 		Option optSetFontSize = new Option("f", "fontSize", true, "Überschreibt die Standardschriftgröße von 10");
 		Option optShowHelp = new Option("h", "help", false, "Zeigt eine Übersicht möglicher Argumente");
-		Option optSetMethodExecDelay = new Option("d", "setMethodExecDelay", true, "Überschreibt den Standarddelay von 100 (ms) zwischen dem Ausführen von Codezeilen");
+		Option optSetMethodExecDelay = new Option("d", "setMethodExecDelay", true,
+				"Überschreibt den Standarddelay von 100 (ms) zwischen dem Ausführen von Codezeilen");
 
 		optEnableMemDump.setRequired(false);
 		optSetFontSize.setRequired(false);
@@ -81,10 +82,11 @@ public class Launcher {
 		}
 		if (cmd.hasOption("setMethodExecDelay")) {
 			try {
-			methodExecDelay = Integer.parseInt(cmd.getOptionValue("setMethodExecDelay"));
+				methodExecDelay = Integer.parseInt(cmd.getOptionValue("setMethodExecDelay"));
 			} catch (NumberFormatException e) {
-				System.out.println(String.format("Fehlerhafte Eingabe. MethodExecDelay %d wird genutzt", methodExecDelay));
-			}			
+				System.out.println(
+						String.format("Fehlerhafte Eingabe. MethodExecDelay %d wird genutzt", methodExecDelay));
+			}
 		}
 	}
 }

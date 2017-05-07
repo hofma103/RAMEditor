@@ -52,7 +52,7 @@ public class EditorPanel {
 		editor.setKeywordHelp(help);
 		editor.setBracesToComplete(new char[][] { { '(', ')' }, { '>', '<' }, { '-', '-' } });
 		editor.setText("");
-		
+
 		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
 		editor.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
 

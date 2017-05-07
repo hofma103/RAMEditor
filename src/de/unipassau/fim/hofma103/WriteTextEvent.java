@@ -15,7 +15,7 @@ public class WriteTextEvent extends AWTEvent {
 	public String getContent() {
 		return str;
 	}
-	
+
 	@Override
 	public int getID() {
 		return id;
