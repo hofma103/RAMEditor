@@ -83,12 +83,13 @@ public class RAMMachine {
 				e.printStackTrace();
 			}
 		}
-		if (debug.interrupt)
+		if (debug.interrupt) {
 			debug.printOutput("Durch Benutzer unterbrochen");
-		else
-			debug.printOutput(String.format(
-					"Zusammenfassung: Es wurden %d Schritte ausgeführt. Davon wurden %d Schritte durch Sprünge verursacht.",
-					stepCounter, loopCounter));
+		} else {
+			debug.printOutput(String.format("Zusammenfassung: Es wurden %d Schritte ausgeführt.", stepCounter));
+			debug.printOutput(
+					String.format("\t\t\t\t Davon wurden %d Schritte durch Sprünge verursacht.", loopCounter));
+		}
 	}
 
 	public void add(int param) {
