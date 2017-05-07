@@ -1,7 +1,2 @@
-counter which shows the amount of method calls during program execution
-possibly also with an additional information about how many steps were inside loops (would be hard to determine due to all the possible uses of jump)
-
 auto formatting with spaces when using -> <- to hint at loops (probably use this as a way to measure loop executions)
 somehow also log the user input in the console
-
-possibly reenable the line numbers again in the console window
