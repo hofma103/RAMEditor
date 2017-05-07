@@ -61,7 +61,7 @@ public class Debugger extends JFrame {
 		consoleOutput.setEditable(false);
 		caret = (DefaultCaret) consoleOutput.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		
+
 		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
 		consoleOutput.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
 
@@ -147,8 +147,8 @@ public class Debugger extends JFrame {
 			public void run() {
 				RAMMachine machine = new RAMMachine(numLines, instance);
 				ArrayList<String> code = new ArrayList<>(Arrays.asList(editorCode.split("\\r?\\n")));
-				machine.inputCode(code);
-				machine.processCode();
+				if (machine.inputCode(code))
+					machine.processCode();
 				debuggerIsRunning = false;
 				interrupt = false;
 				End.setEnabled(false);
