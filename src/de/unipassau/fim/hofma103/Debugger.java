@@ -60,7 +60,6 @@ public class Debugger extends JFrame {
 		consoleOutput.setEditable(false);
 		caret = (DefaultCaret) consoleOutput.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		consoleOutput.setDisplayLineNumbers(false);
 
 		add(consoleOutput.getContainerWithLines(), BorderLayout.CENTER);
 		add(inputArea, BorderLayout.SOUTH);
@@ -154,8 +153,10 @@ public class Debugger extends JFrame {
 			try {
 				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? lineseparator : "") + event.getContent(),
 						null);
-				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+				consoleOutput.setText("");
 				consoleOutput.setCaretPosition(doc.getLength());
+				consoleOutput.updateLineNumberDivider();
+				consoleOutput.updateLineNumberView();
 			} catch (BadLocationException e1) {
 				e1.printStackTrace();
 			}
@@ -192,12 +193,5 @@ public class Debugger extends JFrame {
 
 	public void printOutput(String out) {
 		Launcher.queue.postEvent(new WriteTextEvent(this, out));
-		// Document doc = consoleOutput.getDocument();
-		// try {
-		// doc.insertString(doc.getLength(), (doc.getLength() > 0 ?
-		// lineseparator : "") + out, null);
-		// caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		// } catch (BadLocationException e) {
-		// }
 	}
 }
