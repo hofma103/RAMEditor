@@ -64,6 +64,7 @@ public class Debugger extends JFrame {
 
 		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
 		consoleOutput.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
+		consoleOutput.updateLineNumberDivider();
 
 		add(consoleOutput.getContainerWithLines(), BorderLayout.CENTER);
 		add(inputArea, BorderLayout.SOUTH);

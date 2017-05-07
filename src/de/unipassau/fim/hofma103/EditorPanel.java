@@ -55,6 +55,7 @@ public class EditorPanel {
 
 		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
 		editor.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
+		editor.updateLineNumberDivider();
 
 		updateWindowTitle();
 		frame.getContentPane().add(editor.getContainerWithLines());
@@ -158,6 +159,7 @@ public class EditorPanel {
 		public void keyPressed(KeyEvent e) {
 			changed = true;
 			Save.setEnabled(true);
+			editor.updateLineNumberDivider();
 			editor.updateLineNumberView();
 		}
 	};
