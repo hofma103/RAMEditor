@@ -182,6 +182,8 @@ public class Debugger extends JFrame {
 	};
 
 	public String getInput() {
+		if (input != null)
+			input = null;
 		while (input == null && !interrupt) {
 			try {
 				Thread.sleep(200);
