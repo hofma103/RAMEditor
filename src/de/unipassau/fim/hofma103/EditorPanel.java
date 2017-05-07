@@ -214,14 +214,14 @@ public class EditorPanel {
 	};
 
 	@SuppressWarnings("serial")
-	Action Debug = new AbstractAction("Debug") {
+	Action Debug = new AbstractAction("Debugger") {
 		public void actionPerformed(ActionEvent e) {
 			SwingUtilities.invokeLater(new Runnable() {
 
 				@Override
 				public void run() {
 					saveOld();
-					if (debug == null)
+					if (debug == null || !debug.isVisible())
 						debug = new Debugger(instance);
 					debug.setVisible();
 				}
