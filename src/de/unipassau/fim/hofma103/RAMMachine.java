@@ -10,6 +10,12 @@ public class RAMMachine {
 
 	private int accumulator = 0;
 	private int programCounter = 0;
+
+	// counts really all steps done by the program
+	private int stepCounter = 0;
+	// counts steps spent on jump commands (does not include the first time a
+	// loop is executed if jumps are used to realize that)
+	private int loopCounter = 0;
 	private Debugger debug;
 
 	public RAMMachine(int programLength, Debugger panel) {
@@ -43,9 +49,10 @@ public class RAMMachine {
 		while (programCounter < functions.size() && !debug.interrupt) {
 			String function = functions.get(programCounter);
 			int functionParameter = functionParameters.get(programCounter);
-			
-			debug.printOutput(String.format("%s" + (functionParameter != Integer.MIN_VALUE ? "(%d)" : "()"), function.replace("At", "@"), functionParameter));
-			
+
+			debug.printOutput(String.format("%s" + (functionParameter != Integer.MIN_VALUE ? "(%d)" : "()"),
+					function.replace("At", "@"), functionParameter));
+
 			java.lang.reflect.Method method = null;
 			try {
 				method = this.getClass().getMethod(function, int.class);
@@ -61,12 +68,14 @@ public class RAMMachine {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
-				debug.printOutput(String.format("Error: Funktion \"%s\" wurde mit einem ungütigen Argument aufgerufen", function));
+				debug.printOutput(String.format("Error: Funktion \"%s\" wurde mit einem ungütigen Argument aufgerufen",
+						function));
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 				debug.printOutput(String.format("Error: Funktion \"%s\" hat einen Fehler verursacht!", function));
 			}
 			programCounter++;
+			stepCounter++;
 
 			try {
 				Thread.sleep(100);
@@ -76,6 +85,10 @@ public class RAMMachine {
 		}
 		if (debug.interrupt)
 			debug.printOutput("Durch Benutzer unterbrochen");
+		else
+			debug.printOutput(String.format(
+					"Zusammenfassung: Es wurden %d Schritte ausgeführt. Davon wurden %d Schritte durch Sprünge verursacht.",
+					stepCounter, loopCounter));
 	}
 
 	public void add(int param) {
@@ -148,32 +161,39 @@ public class RAMMachine {
 
 	public void jumpGtz(int param) {
 		if (accumulator > 0)
-			programCounter = memory.get(param) - 2;
+			updateProgramCounter(memory.get(param));
 	}
 
 	public void jumpGtzAt(int param) {
 		if (accumulator > 0)
-			programCounter = memory.get(memory.get(param)) - 2;
+			updateProgramCounter(memory.get(memory.get(param)));
 	}
 
 	public void jumpGtzAbs(int param) {
 		if (accumulator > 0)
-			programCounter = param - 2;
+			updateProgramCounter(param);
 	}
 
 	public void jumpZ(int param) {
 		if (accumulator == 0)
-			programCounter = memory.get(param) - 2;
+			updateProgramCounter(memory.get(param));
 	}
 
 	public void jumpZAt(int param) {
 		if (accumulator == 0)
-			programCounter = memory.get(memory.get(param)) - 2;
+			updateProgramCounter(memory.get(memory.get(param)));
 	}
 
 	public void jumpZAbs(int param) {
 		if (accumulator == 0)
-			programCounter = param - 2;
+			updateProgramCounter(param);
+	}
+
+	private void updateProgramCounter(int newCount) {
+		int oldCount = programCounter;
+		programCounter = newCount - 2;
+		if (oldCount > programCounter)
+			loopCounter = loopCounter + (oldCount - programCounter);
 	}
 
 	public void read(int param) {
