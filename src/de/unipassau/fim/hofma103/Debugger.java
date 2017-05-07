@@ -98,11 +98,18 @@ public class Debugger extends JFrame {
 			ClearConsole.actionPerformed(null);
 			interrupt = false;
 			if (!debuggerIsRunning) {
-				if (panel.getEditor().getText().length() > 0) {
-					startDebugging(panel.getEditor().getText(), panel.getEditor().getNumberOfLines());
-					End.setEnabled(true);
-					Start.setEnabled(false);
-					inputArea.requestFocusInWindow();
+				String tmp = panel.getEditor().getText();
+				tmp = tmp.replaceAll("\\s+", "");
+				String[] tmpArray = tmp.split(lineseparator);
+				if (tmpArray.length > 0 && tmpArray[0].length() > 0) {
+					if (panel.getEditor().getText().length() > 0) {
+						startDebugging(panel.getEditor().getText(), panel.getEditor().getNumberOfLines());
+						End.setEnabled(true);
+						Start.setEnabled(false);
+						inputArea.requestFocusInWindow();
+					} else {
+						printOutput("Kein Code gefunden!");
+					}
 				} else {
 					printOutput("Kein Code gefunden!");
 				}
@@ -153,7 +160,6 @@ public class Debugger extends JFrame {
 			try {
 				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? lineseparator : "") + event.getContent(),
 						null);
-				consoleOutput.setText("");
 				consoleOutput.setCaretPosition(doc.getLength());
 				consoleOutput.updateLineNumberDivider();
 				consoleOutput.updateLineNumberView();
