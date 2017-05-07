@@ -86,6 +86,7 @@ public class Debugger extends JFrame {
 		syntax.put("^Error.*", Color.RED);
 		syntax.put("^Memorydump.*", Color.GREEN);
 		syntax.put("^Zusammenfassung.*", Color.GREEN);
+		syntax.put("^Eingabe.*", Color.GREEN);
 	}
 
 	public void setVisible() {
@@ -197,6 +198,7 @@ public class Debugger extends JFrame {
 			input = "0";
 		String tmp = input;
 		input = null;
+		printOutput(String.format("Eingabe: %s", tmp));
 		return tmp;
 	}
 
