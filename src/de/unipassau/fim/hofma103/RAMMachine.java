@@ -78,7 +78,7 @@ public class RAMMachine {
 			stepCounter++;
 
 			try {
-				Thread.sleep(100);
+				Thread.sleep(Launcher.methodExecDelay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
