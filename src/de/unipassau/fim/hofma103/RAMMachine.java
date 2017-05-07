@@ -38,10 +38,11 @@ public class RAMMachine {
 			String method = str.substring(beginIndex, middleIndex);
 			int methodParam = Integer.MIN_VALUE;
 			try {
-			if (endIndex - 1 > middleIndex)
-				methodParam = Integer.parseInt(str.substring(middleIndex + 1, endIndex));
+				if (endIndex - 1 > middleIndex)
+					methodParam = Integer.parseInt(str.substring(middleIndex + 1, endIndex));
 			} catch (NumberFormatException e) {
-				debug.printOutput(String.format("Fehler: \"%s\" ist keine Zahl", str.substring(middleIndex + 1, endIndex)));
+				debug.printError(String.format("\"%s\" ist keine Zahl", str.substring(middleIndex + 1, endIndex)),
+						i + 1);
 				return false;
 			}
 			method = method.replace("@", "At");
@@ -63,17 +64,20 @@ public class RAMMachine {
 			try {
 				method = this.getClass().getMethod(function, int.class);
 			} catch (NoSuchMethodException e1) {
-				debug.printOutput(String.format("Fehler: Funktion \"%s\" nicht gefunden!", function.replace("At", "@")));
+				debug.printError(String.format("Funktion \"%s\" nicht gefunden!", function.replace("At", "@")),
+						programCounter + 1);
 			} catch (SecurityException e1) {
 			}
 			try {
 				method.invoke(this, functionParameter);
 			} catch (IllegalAccessException e) {
 			} catch (IllegalArgumentException e) {
-				debug.printOutput(String.format("Fehler: Funktion \"%s\" wurde mit einem ungütigen Argument aufgerufen",
-						function.replace("At", "@")));
+				debug.printError(String.format("Funktion \"%s\" wurde mit einem ungütigen Argument aufgerufen",
+						function.replace("At", "@")), programCounter + 1);
 			} catch (InvocationTargetException e) {
-				debug.printOutput(String.format("Fehler: Funktion \"%s\" hat einen Fehler verursacht!", function.replace("At", "@")));
+				debug.printError(
+						String.format("Funktion \"%s\" hat einen Fehler verursacht!", function.replace("At", "@")),
+						programCounter + 1);
 			}
 			programCounter++;
 			stepCounter++;
@@ -202,7 +206,7 @@ public class RAMMachine {
 		try {
 			accumulator = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
-			debug.printOutput(String.format("Fehler: \"%s\" ist keine Zahl!", input));
+			debug.printError(String.format("\"%s\" ist keine Zahl!", input), programCounter + 1);
 			debug.printOutput("Bitte geben Sie eine neue Zahl ein");
 			read(param);
 		}
