@@ -26,7 +26,7 @@ public class RAMMachine {
 		this.debug = panel;
 	}
 
-	public void inputCode(ArrayList<String> code) {
+	public boolean inputCode(ArrayList<String> code) {
 		for (int i = 0; i < code.size(); i++) {
 			String str = code.get(i);
 			str = str.replaceAll("\\s+", "");
@@ -37,12 +37,18 @@ public class RAMMachine {
 				beginIndex = 2;
 			String method = str.substring(beginIndex, middleIndex);
 			int methodParam = Integer.MIN_VALUE;
+			try {
 			if (endIndex - 1 > middleIndex)
 				methodParam = Integer.parseInt(str.substring(middleIndex + 1, endIndex));
+			} catch (NumberFormatException e) {
+				debug.printOutput(String.format("Error: \"%s\" ist keine Zahl", str.substring(middleIndex + 1, endIndex)));
+				return false;
+			}
 			method = method.replace("@", "At");
 			functions.add(method);
 			functionParameters.add(methodParam);
 		}
+		return true;
 	}
 
 	public void processCode() {
@@ -58,7 +64,7 @@ public class RAMMachine {
 				method = this.getClass().getMethod(function, int.class);
 			} catch (NoSuchMethodException e1) {
 				e1.printStackTrace();
-				debug.printOutput(String.format("Error: Funktion \"%s\" nicht gefunden!", function));
+				debug.printOutput(String.format("Error: Funktion \"%s\" nicht gefunden!", function.replace("At", "@")));
 			} catch (SecurityException e1) {
 				e1.printStackTrace();
 			}
@@ -69,10 +75,10 @@ public class RAMMachine {
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 				debug.printOutput(String.format("Error: Funktion \"%s\" wurde mit einem ungütigen Argument aufgerufen",
-						function));
+						function.replace("At", "@")));
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
-				debug.printOutput(String.format("Error: Funktion \"%s\" hat einen Fehler verursacht!", function));
+				debug.printOutput(String.format("Error: Funktion \"%s\" hat einen Fehler verursacht!", function.replace("At", "@")));
 			}
 			programCounter++;
 			stepCounter++;
