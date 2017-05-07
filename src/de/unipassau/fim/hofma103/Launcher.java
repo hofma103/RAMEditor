@@ -16,6 +16,7 @@ import org.apache.commons.cli.ParseException;
 public class Launcher {
 	public static boolean enableMemDump = false;
 	public static int fontSize = 10;
+	public static int methodExecDelay = 100;
 	public static EventQueue queue;
 
 	public static void main(String[] args) {
@@ -40,14 +41,17 @@ public class Launcher {
 				"Aktiviert memory-dump während des Debuggens");
 		Option optSetFontSize = new Option("f", "fontSize", true, "Überschreibt die Standardschriftgröße von 10");
 		Option optShowHelp = new Option("h", "help", false, "Zeigt eine Übersicht möglicher Argumente");
+		Option optSetMethodExecDelay = new Option("d", "setMethodExecDelay", true, "Überschreibt den Standarddelay von 100 (ms) zwischen dem Ausführen von Codezeilen");
 
 		optEnableMemDump.setRequired(false);
 		optSetFontSize.setRequired(false);
 		optShowHelp.setRequired(false);
+		optSetMethodExecDelay.setRequired(false);
 
 		commandLineOptions.addOption(optEnableMemDump);
 		commandLineOptions.addOption(optSetFontSize);
 		commandLineOptions.addOption(optShowHelp);
+		commandLineOptions.addOption(optSetMethodExecDelay);
 
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -67,13 +71,20 @@ public class Launcher {
 			try {
 				fontSize = Integer.parseInt(cmd.getOptionValue("fontSize"));
 			} catch (NumberFormatException e) {
-				System.out.println("Fehlerhafte Eingabe. Schriftgröße 10 wird genutzt");
+				System.out.println(String.format("Fehlerhafte Eingabe. Schriftgröße %d wird genutzt", fontSize));
 			}
 		}
 		if (cmd.hasOption("help")) {
 			formatter.printHelp(usageHelp, commandLineOptions);
 			System.exit(1);
 			return;
+		}
+		if (cmd.hasOption("setMethodExecDelay")) {
+			try {
+			methodExecDelay = Integer.parseInt(cmd.getOptionValue("setMethodExecDelay"));
+			} catch (NumberFormatException e) {
+				System.out.println(String.format("Fehlerhafte Eingabe. MethodExecDelay %d wird genutzt", methodExecDelay));
+			}			
 		}
 	}
 }
