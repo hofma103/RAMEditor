@@ -7,8 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -251,7 +253,7 @@ public class EditorPanel {
 
 	private void saveFile(String name) {
 		try {
-			FileWriter w = new FileWriter(name);
+			OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(name), Charset.forName("UTF-8"));
 			editor.write(w);
 			w.close();
 			currentFile = name;
@@ -265,7 +267,7 @@ public class EditorPanel {
 	private void readInFile(String fileName) {
 		try {
 			Path file = Paths.get(fileName);
-			editor.setText(new String(Files.readAllBytes(file)));
+			editor.setText(new String(Files.readAllBytes(file), Charset.forName("UTF-8")));
 			currentFile = fileName;
 			changed = false;
 			Save.setEnabled(false);
