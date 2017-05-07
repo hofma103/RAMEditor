@@ -98,7 +98,7 @@ public class Debugger extends JFrame {
 		setVisible(true);
 	}
 
-	Action Start = new AbstractAction("Debugger starten") {
+	Action Start = new AbstractAction("Debugging starten") {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			ClearConsole.actionPerformed(null);
