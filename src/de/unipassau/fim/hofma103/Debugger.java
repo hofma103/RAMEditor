@@ -167,7 +167,6 @@ public class Debugger extends JFrame {
 				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? "\n" : "") + event.getContent(),
 						null);
 				consoleOutput.setCaretPosition(doc.getLength());
-				consoleOutput.updateLineNumberDivider();
 				consoleOutput.updateLineNumberView();
 			} catch (BadLocationException e1) {
 			}

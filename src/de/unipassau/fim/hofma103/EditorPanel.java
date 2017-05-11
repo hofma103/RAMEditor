@@ -161,7 +161,6 @@ public class EditorPanel {
 		public void keyPressed(KeyEvent e) {
 			changed = true;
 			Save.setEnabled(true);
-			editor.updateLineNumberDivider();
 			editor.updateLineNumberView();
 		}
 	};
