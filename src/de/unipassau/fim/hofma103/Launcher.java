@@ -18,6 +18,15 @@ public class Launcher {
 	public static int fontSize = 10;
 	public static int methodExecDelay = 100;
 	public static EventQueue queue;
+	/**
+	 * this can only be used in regular expressions, but it matches all the
+	 * possible cases:<br>
+	 * \r\n: windows machines<br>
+	 * \r: old mac systems<br>
+	 * \n: Unix systems (including newer mac systems)<br>
+	 * "\\r?\\n" would only split on \r\n and \n
+	 */
+	public static final String REGEXP_LINE_SEPARATOR = "(\r\n|\r|\n)";
 
 	public static void main(String[] args) {
 		if (args.length > 0)
