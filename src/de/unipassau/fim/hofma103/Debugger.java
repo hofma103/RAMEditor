@@ -186,6 +186,7 @@ public class Debugger extends JFrame {
 	};
 
 	public String getInput() {
+		inputArea.requestFocusInWindow();
 		if (input != null)
 			input = null;
 		while (input == null && !interrupt) {
