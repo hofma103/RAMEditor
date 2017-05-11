@@ -40,7 +40,6 @@ public class Debugger extends JFrame {
 	private boolean debuggerIsRunning = false;
 	public boolean interrupt = false;
 
-	private String lineseparator = System.getProperty("line.separator");
 	private DefaultCaret caret;
 
 	@SuppressWarnings("unchecked")
@@ -107,7 +106,7 @@ public class Debugger extends JFrame {
 			if (!debuggerIsRunning) {
 				String tmp = panel.getEditor().getText();
 				tmp = tmp.replaceAll("\\s+", "");
-				String[] tmpArray = tmp.split(lineseparator);
+				String[] tmpArray = tmp.split(Launcher.REGEXP_LINE_SEPARATOR);
 				if (tmpArray.length > 0 && tmpArray[0].length() > 0) {
 					if (panel.getEditor().getText().length() > 0) {
 						startDebugging(panel.getEditor().getText(), panel.getEditor().getNumberOfLines());
@@ -147,7 +146,7 @@ public class Debugger extends JFrame {
 			@Override
 			public void run() {
 				RAMMachine machine = new RAMMachine(numLines, instance);
-				ArrayList<String> code = new ArrayList<>(Arrays.asList(editorCode.split("\\r?\\n")));
+				ArrayList<String> code = new ArrayList<>(Arrays.asList(editorCode.split(Launcher.REGEXP_LINE_SEPARATOR)));
 				if (machine.inputCode(code))
 					machine.processCode();
 				debuggerIsRunning = false;
@@ -165,7 +164,7 @@ public class Debugger extends JFrame {
 			WriteTextEvent event = (WriteTextEvent) e;
 			Document doc = consoleOutput.getDocument();
 			try {
-				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? lineseparator : "") + event.getContent(),
+				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? "\n" : "") + event.getContent(),
 						null);
 				consoleOutput.setCaretPosition(doc.getLength());
 				consoleOutput.updateLineNumberDivider();
