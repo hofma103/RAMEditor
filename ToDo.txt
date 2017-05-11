@@ -2,5 +2,3 @@ auto formatting with spaces when using -> <- to hint at loops (probably use this
 properly handle NullPointerExceptions etc in RAMMachine
 
 font size of 10 looks really bad on Windows (probably take at least 12 as standard option)
-LineNumberDivider not updated properly on Windows (works in the Debugger window, but not in the EditorPanel)
-command line output does not format "Umlaute" properly
