@@ -146,7 +146,8 @@ public class Debugger extends JFrame {
 			@Override
 			public void run() {
 				RAMMachine machine = new RAMMachine(numLines, instance);
-				ArrayList<String> code = new ArrayList<>(Arrays.asList(editorCode.split(Launcher.REGEXP_LINE_SEPARATOR)));
+				ArrayList<String> code = new ArrayList<>(
+						Arrays.asList(editorCode.split(Launcher.REGEXP_LINE_SEPARATOR)));
 				if (machine.inputCode(code))
 					machine.processCode();
 				debuggerIsRunning = false;
@@ -164,8 +165,7 @@ public class Debugger extends JFrame {
 			WriteTextEvent event = (WriteTextEvent) e;
 			Document doc = consoleOutput.getDocument();
 			try {
-				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? "\n" : "") + event.getContent(),
-						null);
+				doc.insertString(doc.getLength(), (doc.getLength() > 0 ? "\n" : "") + event.getContent(), null);
 				consoleOutput.setCaretPosition(doc.getLength());
 				consoleOutput.updateLineNumberView();
 			} catch (BadLocationException e1) {
