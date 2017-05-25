@@ -61,7 +61,6 @@ public class Debugger extends JFrame {
 		caret = (DefaultCaret) consoleOutput.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
 		consoleOutput.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
 		consoleOutput.updateLineNumberDivider();
 

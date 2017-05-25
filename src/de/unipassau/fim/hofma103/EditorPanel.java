@@ -55,7 +55,6 @@ public class EditorPanel {
 		editor.setBracesToComplete(new char[][] { { '(', ')' }, { '>', '<' }, { '-', '-' } });
 		editor.setText("");
 
-		CodeEditorPane.DEFAULT_FONT_SIZE = Launcher.fontSize;
 		editor.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
 		editor.updateLineNumberDivider();
 
