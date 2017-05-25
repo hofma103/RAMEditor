@@ -1,5 +1,8 @@
 # RAMEditor
 just a small editor and debugger for some pseudo programming language
+<br>
+[ToDo list](ToDo.md) for this editor<br>
+[How to use](HowToUse.md) this editor and the debugger
 
 to build this project, one needs:
 - [the Apache Commons-Cli Library (I used v1.4)](https://commons.apache.org/proper/commons-cli/)
