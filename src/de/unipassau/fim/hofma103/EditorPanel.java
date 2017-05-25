@@ -52,7 +52,7 @@ public class EditorPanel {
 
 		editor.setKeywordColor(syntax);
 		editor.setKeywordHelp(help);
-		editor.setBracesToComplete(new char[][] { { '(', ')' }, { '>', '<' }, { '-', '-' } });
+		editor.setBracesToComplete(new char[][] { { '(', ')' } });
 		editor.setText("");
 
 		editor.setFont(Font.decode(Font.MONOSPACED + " " + Launcher.fontSize));
