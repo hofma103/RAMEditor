@@ -72,7 +72,11 @@ List of commands:
 | read() | acc = "the next input value" |
 | print() | writes acc to a file (or here the debugger console) |
 
-
+explanation of names:
+- `acc` is the accumulator of the RAM machine
+- `pc` is the program counter (keep in mind that the program starts with line number 1)
+- `mem` is the memory (the Registers of a RAM machine, basically represented by an `int[]` at this place)
+- `k` is of the type `int` and is just an input parameter for the function calls
 
 
 
