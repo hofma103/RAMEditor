@@ -1,1 +1,1 @@
-[ ] english translation
+- [ ] english translation
