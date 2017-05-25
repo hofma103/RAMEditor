@@ -18,6 +18,8 @@ public class RAMMachine {
 	private int loopCounter = 0;
 	private Debugger debug;
 
+	private boolean errorInterrupt = false;
+
 	public RAMMachine(int programLength, Debugger panel) {
 		memory = new Memory(panel);
 		functions = new ArrayList<String>(programLength);
@@ -53,7 +55,7 @@ public class RAMMachine {
 	}
 
 	public void processCode() {
-		while (programCounter < functions.size() && !debug.interrupt) {
+		while (programCounter < functions.size() && !debug.interrupt && !errorInterrupt) {
 			String function = functions.get(programCounter);
 			int functionParameter = functionParameters.get(programCounter);
 
@@ -66,18 +68,30 @@ public class RAMMachine {
 			} catch (NoSuchMethodException e1) {
 				debug.printError(String.format("Funktion \"%s\" nicht gefunden!", function.replace("At", "@")),
 						programCounter + 1);
+				errorInterrupt = true;
 			} catch (SecurityException e1) {
+				errorInterrupt = true;
 			}
 			try {
 				method.invoke(this, functionParameter);
 			} catch (IllegalAccessException e) {
+				errorInterrupt = true;
 			} catch (IllegalArgumentException e) {
 				debug.printError(String.format("Funktion \"%s\" wurde mit einem ungütigen Argument aufgerufen",
 						function.replace("At", "@")), programCounter + 1);
+				errorInterrupt = true;
 			} catch (InvocationTargetException e) {
-				debug.printError(
-						String.format("Funktion \"%s\" hat einen Fehler verursacht!", function.replace("At", "@")),
-						programCounter + 1);
+				if (e.getCause() instanceof IllegalArgumentException || e.getCause() instanceof IndexOutOfBoundsException) {
+					debug.printError(String.format("Funktion \"%s\" wurde mit einem ungültigen Argument aufgerufen",
+							function.replace("At", "@")), programCounter + 1);
+				} else {
+					debug.printError(
+							String.format("Funktion \"%s\" hat einen Fehler verursacht!", function.replace("At", "@")),
+							programCounter + 1);
+				}
+				errorInterrupt = true;
+			} catch (NullPointerException e) {
+				errorInterrupt = true;
 			}
 			programCounter++;
 			stepCounter++;
@@ -87,6 +101,12 @@ public class RAMMachine {
 			} catch (InterruptedException e) {
 			}
 		}
+		if (errorInterrupt) {
+			errorInterrupt = false;
+			debug.End.actionPerformed(null);
+			return;
+		}
+
 		if (debug.interrupt) {
 			debug.printOutput("Durch Benutzer unterbrochen");
 		} else {
@@ -195,6 +215,8 @@ public class RAMMachine {
 	}
 
 	private void updateProgramCounter(int newCount) {
+		if (newCount - 2 < -1)
+			throw new IllegalArgumentException();
 		int oldCount = programCounter;
 		programCounter = newCount - 2;
 		if (oldCount > programCounter)
@@ -202,6 +224,8 @@ public class RAMMachine {
 	}
 
 	public void read(int param) {
+		if (param != Integer.MIN_VALUE)
+			throw new IllegalArgumentException();
 		String input = debug.getInput();
 		try {
 			accumulator = Integer.parseInt(input);
@@ -213,6 +237,8 @@ public class RAMMachine {
 	}
 
 	public void print(int param) {
+		if (param != Integer.MIN_VALUE)
+			throw new IllegalArgumentException();
 		debug.printOutput("" + accumulator);
 	}
 }
