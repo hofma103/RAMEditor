@@ -1,2 +1,7 @@
-road()
+read(1) //show error as this does not take any input
+print(1) // show error as this does not take any input
+store()
+load(-1)
+print()
 dest()
+print()
