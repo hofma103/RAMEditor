@@ -77,6 +77,3 @@ explanation of names:
 - `pc` is the program counter (keep in mind that the program starts with line number 1)
 - `mem` is the memory (the Registers of a RAM machine, basically represented by an `int[]` at this place)
 - `k` is of the type `int` and is just an input parameter for the function calls
-
-
-
