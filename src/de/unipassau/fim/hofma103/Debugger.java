@@ -49,7 +49,7 @@ public class Debugger extends JFrame {
 		this.panel = panel;
 
 		enableEvents(WriteTextEvent.id);
-		setName("Debugger");
+		setTitle("Debugger");
 		consoleOutput = new CodeEditorPane();
 
 		initDebugSyntax();
