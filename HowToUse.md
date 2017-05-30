@@ -31,6 +31,7 @@
 - shows the user input
 - shows error messages with the corresponding line number in your code so that you can find errors (hopefully not mine) a lot easier
 - shows a basic summary of how many steps it took to execute the full code (also includes some basic summary about steps spend due to jump function calls, but this is by far not accurate at the moment)
+- if it ever stops responding, simply close the debugger window and press the "Debugger" button to start a new instance of it
 #### 4. The RAM language
 This is sort of a basic programming language using the [Random-access Machine model](https://en.wikipedia.org/wiki/Random-access_machine) (wikipedia link)
 List of commands:
