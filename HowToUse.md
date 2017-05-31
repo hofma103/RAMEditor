@@ -3,7 +3,7 @@
 1. [Command line options](#1-command-line-options)
 2. [Functionality of the editor](#2-functionality-of-the-editor)
 3. [Functionality of the debugger](#3-functionality-of-the-debugger)
-3. [The RAM language](#4-the-ram-language)
+4. [The RAM language](#4-the-ram-language)
 <br><br>
 
 
@@ -17,10 +17,12 @@
 | `-f` | `--fontSize` | `integer` | overrides the default font size of 10 (the editor and debugger window allow you to change the font size by pressing Ctrl while scrolling) |
 | `-d` | `--setMethodExecDelay` | `integer` | overrides the default delay of 100 ms between executing two code lines in the debugger (slowing the program execution down makes it also a lot easier to see what it does) |
 | `-h` | `--help` | `none` | shows an overview about the command line options |
+
 #### 2. Functionality of the editor
 - open and save code files using the "Datei" menu
 - syntax highlighting for the RAM language functions
 - autocompletition (Press Ctrl + Space to open the completition menu. One can still input text while this menu is shown)
+
 #### 3. Functionality of the debugger
 - is opened using the "Debugger" button in the editors menu bar
 - fetches the latest code from the editor when debugging is started ("Debugging starten" button)
@@ -32,6 +34,7 @@
 - shows error messages with the corresponding line number in your code so that you can find errors (hopefully not mine) a lot easier
 - shows a basic summary of how many steps it took to execute the full code (also includes some basic summary about steps spend due to jump function calls, but this is by far not accurate at the moment)
 - if it ever stops responding, simply close the debugger window and press the "Debugger" button to start a new instance of it
+
 #### 4. The RAM language
 This is sort of a basic programming language using the [Random-access Machine model](https://en.wikipedia.org/wiki/Random-access_machine) (wikipedia link)
 List of commands:
